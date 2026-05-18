@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request
 
-# 1. Initialize Flask App (Ye line sabse zaroori hai)
+# 1. Initialize Flask App (This line is most important)
 app = Flask(__name__)
 
 # Fake Database for DecodeLabs Project
