@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #218838;
+        }
+        </style>
+</head>
+<body>
+        <h1>Student Registration Form</h1>
+        <form action="/submit-student" method="POST">
+            <label for="name">Name:</label><br>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="age">Age:</label><br>
+            <input type="number" id="age" name="age" required><br><br>
+
+            <label for="grade">Grade:</label><br>
+            <input type="text" id="grade" name="grade" required><br><br>
+
+            <input type="submit" value="Submit">
+        
+        </form>
+        <script>
+            document.getElementById('studentForm').addEventListener('submit',  async (e) => {
+                event.preventDefault();
+                //HTML Input field values
+
+                const name = document.getElementById('name').value;
+                const age = document.getElementById('age').value;
+                const grade = document.getElementById('grade').value;
+                try {
+                        // Flask Backend API Call
+                        const response = await fetch('http://127.0.0:5000/api/students/add', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ name, age, grade })
+                        });
+                        const data = await response.json();
+
+                        //Backend Response Handling - Show alert message
+
+                        if (response.ok) {
+                            alert('Student registered successfully!');
+                        } else {
+                            alert('Failed to register student: ' + data.message);
+                        } else {
+                            alert('An error occurred while registering the student.');
+                        }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while registering the student.');  
+                }                       
+
+                // Create a student object
+                const student = {
+                    name: name,
+                    age: age,
+                    grade: grade
+                };
+
+                // Send the student data to the server (you can use fetch or XMLHttpRequest)
+                fetch('/submit-student', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(student)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Student registered successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('An error occurred while registering the student.');
+                });
+            });
+        </script>
+        </body>
+</html>
